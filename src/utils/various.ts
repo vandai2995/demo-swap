@@ -16,40 +16,6 @@ export function loadWalletKey(keypair: any): anchor.web3.Keypair {
     return loaded;
 }
 
-export async function loadPoolProgram(
-    walletKeyPair: anchor.web3.Keypair,
-    env: string,
-    customRpcUrl?: string,
-) {
-    if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl);
-
-    // @ts-ignore
-    const solConnection = new anchor.web3.Connection(
-        //@ts-ignore
-        customRpcUrl || anchor.web3.clusterApiUrl(env),
-        "processed"
-    );
-
-    const walletWrapper = new anchor.Wallet(walletKeyPair);
-    const provider = new anchor.AnchorProvider(solConnection, walletWrapper, {
-        preflightCommitment: 'processed',
-        commitment: 'processed'
-    });
-
-
-    const idl = JSON.parse(
-        require('fs').readFileSync(
-            './target/idl/solana_swap.json',
-            'utf8',
-        ),
-    );
-
-    const program = new anchor.Program(idl, SWAP_PROGRAM_ID, provider);
-    console.log('program id from anchor', program.programId.toBase58());
-
-    return program;
-}
-
 export async function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
