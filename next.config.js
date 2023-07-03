@@ -1,3 +1,4 @@
+const dotenv = require("dotenv");
 /** @type {import('next').NextConfig} */
 const withPlugins = require("next-compose-plugins");
 
@@ -54,5 +55,7 @@ const nextConfig = {
     return config;
   },
 };
+
+dotenv.config();
 
 module.exports = withPlugins(plugins, nextConfig);

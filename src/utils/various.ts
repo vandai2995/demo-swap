@@ -1,17 +1,15 @@
 import * as anchor from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import fs from 'fs';
-
+import * as splToken from '@solana/spl-token';
 export const SWAP_PROGRAM_ID = new anchor.web3.PublicKey("G8wxZbx3xzSzsLBHaEuNcCeN14nVoBLiHoW3QVEL8dP5");
 export const POOL_PUBKEY = new anchor.web3.PublicKey("HpnCVKQ2aWy4u15W1QQdxA9cjzZD3EW3LsAWTMtVMoa9")
 export const MOVE_TOKEN = new anchor.web3.PublicKey("sy4LXfLXTmMQUCUVjaNf59Kc274NWKXZPjCzMPhM1je");
 export const DECIMAL = 1000000000;
-export function loadWalletKey(keypair: any): anchor.web3.Keypair {
-    if (!keypair || keypair == '') {
-        throw new Error('Keypair is required!');
-    }
+export function loadWalletKey(secret: any): anchor.web3.Keypair {
+
     const loaded = anchor.web3.Keypair.fromSecretKey(
-        new Uint8Array(JSON.parse(fs.readFileSync(keypair).toString())),
+        new Uint8Array(JSON.parse(secret)),
     );
     return loaded;
 }
@@ -38,4 +36,60 @@ export async function transferSolana(connection: anchor.web3.Connection, from: a
         },
     );
     return signature;
+}
+
+export async function transferToken(connection: anchor.web3.Connection, from: anchor.web3.Keypair, to: anchor.web3.PublicKey, amount: number, mint: anchor.web3.PublicKey) {
+    let fromTokenAccount;
+    fromTokenAccount = await splToken.getAssociatedTokenAddress(
+        mint,
+        from.publicKey,
+    );
+
+    if (!fromTokenAccount) {
+        fromTokenAccount = await splToken.createAssociatedTokenAccount(
+            connection,
+            from,
+            mint,
+            from.publicKey,
+        )
+    }
+    let toTokenAccount;
+    toTokenAccount = await splToken.getAssociatedTokenAddress(
+        mint,
+        to,
+    );
+
+    if (!toTokenAccount) {
+        toTokenAccount = await splToken.createAssociatedTokenAccount(
+            connection,
+            from,
+            mint,
+            to,
+        )
+    }
+    if (fromTokenAccount && toTokenAccount) {
+        const transaction = new anchor.web3.Transaction().add(
+            splToken.createTransferInstruction(
+                fromTokenAccount,
+                toTokenAccount,
+                from.publicKey,
+                amount * DECIMAL,
+                [],
+            ),
+        );
+
+        const signature = await anchor.web3.sendAndConfirmTransaction(
+            //@ts-ignore
+            connection,
+            transaction,
+            [from],
+            {
+                commitment: 'processed',
+            },
+        );
+
+        return signature;
+    } else
+        throw new Error('Something went wrong!');
+
 }

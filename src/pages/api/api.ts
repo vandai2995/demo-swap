@@ -17,8 +17,15 @@ export async function depositSol(
         liquidityPool: liquidityPoolPubkey,
         solAccount: liquidityPoolAccount.solAccount,
         systemProgram: web3.SystemProgram.programId,
-    }).signers([]).rpc();
+    }).signers([]).rpc(
+        {
+            commitment: "confirmed"
+        }
 
+    );
+
+    const liquidityPoolAccountAfter = Object(await swapProgram.account.liquidityPool.fetch(liquidityPoolPubkey));
+    const solReserve = liquidityPoolAccountAfter.solReserve.toNumber() / anchor.web3.LAMPORTS_PER_SOL;
     return tx;
 }
 
