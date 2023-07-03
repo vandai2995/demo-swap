@@ -20,10 +20,10 @@ export const HomeView: FC = ({ }) => {
   const { program } = useProgram({ connection, wallet });
   const [amountAddSol, setAmountAddSol] = useState(undefined);
   const [amountAddMove, setAmountAddMove] = useState(undefined);
-  const [inputAddSolValue, setInputAddSolValue] = useState("");
   const [amountSwapSol, setAmountSwapSol] = useState(undefined);
   const [amountSwapMove, setAmountSwapMove] = useState(undefined);
-  const [inputSwapSolValue, setInputSwapSolValue] = useState(false);
+  // const [inputAddSolValue, setInputAddSolValue] = useState("");
+  // const [inputSwapSolValue, setInputSwapSolValue] = useState(false);
 
   const [poolInfo, setPoolInfo] = useState({
     poolSol: 0,
@@ -39,17 +39,12 @@ export const HomeView: FC = ({ }) => {
         showLoaderOnConfirm: true,
         preConfirm: async () => {
           try {
-
-            // const signature = await connection.requestAirdrop(
-            //   wallet.publicKey,
-            //   1000000000
-            // );
-            // const tx = await connection.confirmTransaction(signature);
-            // console.log(tx);
-            console.log("test")
-            setTimeout(() => {
-              console.log("OK")
-            }, 3000)
+            const signature = await connection.requestAirdrop(
+              wallet.publicKey,
+              1000000000
+            );
+            const tx = await connection.confirmTransaction(signature);
+            console.log(tx);
           }
           catch (error) {
             Swal.showValidationMessage(
@@ -116,16 +111,6 @@ export const HomeView: FC = ({ }) => {
   const onAddSolChange = (e: any) => {
     const updatedValue = e.target.value;
     setAmountAddSol(updatedValue);
-    // setInputValue(updatedValue)
-    try {
-      //test log after 1 second
-      setTimeout(() => {
-        setInputAddSolValue(updatedValue)
-      }, 1000)
-    }
-    catch (e) {
-      console.log(e)
-    }
   }
   const onHandleAddSolClick = async () => {
     let addTx: any;
@@ -136,6 +121,14 @@ export const HomeView: FC = ({ }) => {
         })
         return;
       }
+      //verify input value is number
+      if (isNaN(amountAddSol)) {
+        Swal.fire({
+          title: `Please enter a number`,
+        })
+        return;
+      }
+
       Swal.fire({
         title: 'Do you want to deposit to liquidity pool?',
         showCancelButton: true,
@@ -183,6 +176,13 @@ export const HomeView: FC = ({ }) => {
         })
         return;
       }
+
+      if (isNaN(amountAddMove)) {
+        Swal.fire({
+          title: `Please enter a number`,
+        })
+        return;
+      }
       Swal.fire({
         title: 'Do you want to deposit to liquidity pool?',
         showCancelButton: true,
@@ -222,19 +222,42 @@ export const HomeView: FC = ({ }) => {
   const onSwapSolChange = (e: any) => {
     const inputValue = e.target.value;
     setAmountSwapSol(e.target.value);
-    setInputSwapSolValue(inputValue !== '');
-    console.log(inputSwapSolValue)
+    // setInputSwapSolValue(inputValue !== '');
   }
-  const onHandleSwapSolClick = () => {
+  const onHandleSwapSolClick = async () => {
 
     let addTx: any;
     if (wallet && program) {
+      const poolInfo: any = await program.account.liquidityPool.fetch(POOL_PUBKEY);
+      const poolMove = poolInfo.moveTokenReserve.toNumber() / DECIMAL;
+      const poolSol = poolInfo.solReserve.toNumber() / LAMPORTS_PER_SOL;
+
+      if (poolMove === 0) {
+        Swal.fire({
+          title: `Pool of MOVE is out of stock. Please add MOVE to the liquidity pool`,
+        })
+        return;
+      }
+
       if (!amountSwapSol) {
         Swal.fire({
           title: `Please enter amount SOL`,
         })
         return;
       }
+      if (isNaN(amountSwapSol)) {
+        Swal.fire({
+          title: `Please enter a number`,
+        })
+        return;
+      }
+      if (poolMove < amountSwapSol * 10) {
+        Swal.fire({
+          title: `Not enough MOVE in the pool`,
+        })
+        return;
+      }
+
       Swal.fire({
         title: 'Do you want to SWAP SOL TO MOVE?',
         showCancelButton: true,
@@ -275,16 +298,39 @@ export const HomeView: FC = ({ }) => {
   const onSwapMoveChange = (e: any) => {
     setAmountSwapMove(e.target.value);
   }
-  const onHandleSwapMoveClick = () => {
+  const onHandleSwapMoveClick = async () => {
 
     let addTx: any;
     if (wallet && program) {
+      const poolInfo: any = await program.account.liquidityPool.fetch(POOL_PUBKEY);
+      const poolSol = poolInfo.solReserve.toNumber() / LAMPORTS_PER_SOL;
+      const poolMove = poolInfo.moveTokenReserve.toNumber() / DECIMAL;
+
+      if (poolSol === 0) {
+        Swal.fire({
+          title: `Pool of SOL is out of stock. Please add SOL to the liquidity pool`,
+        })
+        return;
+      }
       if (!amountSwapMove) {
         Swal.fire({
           title: `Please enter amount MOVE`,
         })
         return;
       }
+      if (isNaN(amountSwapMove)) {
+        Swal.fire({
+          title: `Please enter a number`,
+        })
+        return;
+      }
+      if (poolSol < amountSwapMove / 10) {
+        Swal.fire({
+          title: `Not enough SOL in the pool`,
+        })
+        return;
+      }
+
       Swal.fire({
         title: 'Do you want to SWAP MOVE TO SOL?',
         showCancelButton: true,
@@ -351,7 +397,7 @@ export const HomeView: FC = ({ }) => {
             <WalletMultiButton className="btn btn-ghost" />
           </div>
         </div>
-        <div className="flex mb-16">
+        <div className="flex mb-2 mt-8">
           <div className="mr-4">Need some SOL on test wallet?</div>
           <div className="mr-4">
             <button
@@ -362,8 +408,16 @@ export const HomeView: FC = ({ }) => {
             </button>
           </div>
         </div>
+        <div className="mb-8">
+          <p className="text-xs">
+            Due to the rate limitation of Solana Devnet, airdrop may fail at times.
+          </p>
+          <p className="text-xs">
+            In such cases, you can use <a href="https://solfaucet.com/" style={{ textDecoration: "underline", color: "lightblue" }}>this</a> instead.
+          </p>
+        </div>
 
-        <div className="flex mb-16">
+        <div className="flex mb-8">
           <div className="mr-4">Need some MOVE on test wallet?</div>
           <div className="mr-4">
             <button
@@ -402,7 +456,7 @@ export const HomeView: FC = ({ }) => {
                       type="text"
                       placeholder="Enter amount SOL"
                       className="w-1/2 input input-borderedinput-lg bg-gray-100 text-black "
-                      value={amountAddSol}
+                      value={amountAddSol !== undefined ? amountAddSol : ''}
                       onChange={onAddSolChange}
 
                     />
@@ -420,7 +474,7 @@ export const HomeView: FC = ({ }) => {
                       type="text"
                       placeholder="Enter amount Move"
                       className="w-1/2 input input-borderedinput-lg bg-gray-100 text-black"
-                      value={amountAddMove}
+                      value={amountAddMove !== undefined ? amountAddMove : ''}
                       onChange={onAddMoveChange}
 
                     />
@@ -461,7 +515,7 @@ export const HomeView: FC = ({ }) => {
                       type="text"
                       placeholder="Enter amount SOL"
                       className="w-1/2 input input-borderedinput-lg bg-gray-100 text-black "
-                      value={amountSwapSol}
+                      value={amountSwapSol !== undefined ? amountSwapSol : ''}
                       onChange={onSwapSolChange}
 
                     />
@@ -484,7 +538,7 @@ export const HomeView: FC = ({ }) => {
                       type="text"
                       placeholder="Enter amount Move"
                       className="w-1/2 input input-borderedinput-lg bg-gray-100 text-black"
-                      value={amountSwapMove}
+                      value={amountSwapMove !== undefined ? amountSwapMove : ''}
                       onChange={onSwapMoveChange}
 
                     />
@@ -503,8 +557,15 @@ export const HomeView: FC = ({ }) => {
               </div>
             </div>
           </div>
+          <div className="mb-8 mt-16">
+            <p className="text-xs">
+              Suppose the rate is constant at 1 SOL = 10 MOVE.
+            </p>
+
+          </div>
         </div>
       </div>
+
     </div>
   );
 };
