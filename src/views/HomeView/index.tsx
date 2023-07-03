@@ -415,7 +415,7 @@ export const HomeView: FC = ({ }) => {
           </p>
         </div>
 
-        <div className="flex mb-8">
+        <div className="flex mb-6">
           <div className="mr-4">Need some MOVE on test wallet?</div>
           <div className="mr-4">
             <button
@@ -431,12 +431,12 @@ export const HomeView: FC = ({ }) => {
 
         <div className="min-h-screen">
           {/* Swap form */}
-          <div className="text-center pt-4">
+          <div className="text-center pt-2">
             <h1 className="mb-5 text-5xl font-bold">
               <span className="text-5xl font-bold">Swap</span>
               <span className="text-5xl font-bold text-primary">.</span>
             </h1>
-            <p className="mb-5">
+            <p className="mb-10">
               Swap MOVE Token on the Solana blockchain.
             </p>
           </div>
@@ -510,7 +510,7 @@ export const HomeView: FC = ({ }) => {
               </div> */}
               <div className="flex">
                 <div className="h-full flex-col w-1/2 text-center flex items-center justify-center">
-                  <span className="text-center  w-full text-xl font-light text-yellow-400">Swap SOL to MOVE</span>
+                  <span className="text-center mr-52 w-full text-xl font-light text-yellow-400">Swap SOL to MOVE</span>
                   <div className="w-full h-full flex items-center justify-center p-2">
 
                     <input
@@ -534,7 +534,7 @@ export const HomeView: FC = ({ }) => {
                   </div>
                 </div>
                 <div className="h-full flex-col w-1/2 text-center flex items-center justify-center">
-                <span className="text-center  w-full text-xl font-light text-yellow-400">Swap Move to SOL</span>
+                <span className="text-center mr-52 w-full text-xl font-light text-yellow-400">Swap Move to SOL</span>
 
                   <div className="w-full h-full flex items-center justify-center p-2">
 
@@ -563,7 +563,7 @@ export const HomeView: FC = ({ }) => {
           </div>
           <div className="mb-8 mt-16">
             <p className="text-xs">
-              Suppose the rate is constant at 1 SOL = 10 MOVE.
+              * Suppose the rate is constant at 1 SOL = 10 MOVE.
             </p>
 
           </div>
