@@ -553,7 +553,7 @@ export const HomeView: FC = ({ }) => {
                     >SWAP</button>
                   </div>
                   <div className={`w-full h-full flex items-center justify-center p-2`}>
-                    <span className={`text-left ml-14 w-full block`}>
+                    <span className={`text-left ml-20 w-full block`}>
                       You will receive: {amountSwapMove ? amountSwapMove / 10 : 0} SOL
                     </span>
                   </div>
