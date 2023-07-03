@@ -7,7 +7,7 @@ class MyDocument extends Document {
         <Head>
           <meta
             name="description"
-            content="This site will fly high 🦤"
+            content="Demostraion of Swap on SOLANA blockchain"
           />
           <link rel="icon" href="/favicon.ico" />
 

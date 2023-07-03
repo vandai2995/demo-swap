@@ -230,7 +230,6 @@ export const HomeView: FC = ({ }) => {
     if (wallet && program) {
       const poolInfo: any = await program.account.liquidityPool.fetch(POOL_PUBKEY);
       const poolMove = poolInfo.moveTokenReserve.toNumber() / DECIMAL;
-      const poolSol = poolInfo.solReserve.toNumber() / LAMPORTS_PER_SOL;
 
       if (poolMove === 0) {
         Swal.fire({
@@ -285,7 +284,7 @@ export const HomeView: FC = ({ }) => {
         if (result.isConfirmed) {
           Swal.fire({
             title: `Swapped!`,
-            text: `You have swapped ${amountSwapSol} SOL to MOVE`,
+            text: `You have swapped ${amountSwapSol} SOL to ${amountSwapSol * 10} MOVE`,
             footer: `<a href="https://explorer.solana.com/tx/${addTx}?cluster=devnet" style="text-decoration: underline; color: blue;">Click to view on Solana Explorer</a>`
           })
           setAmountSwapSol(undefined);
@@ -304,7 +303,6 @@ export const HomeView: FC = ({ }) => {
     if (wallet && program) {
       const poolInfo: any = await program.account.liquidityPool.fetch(POOL_PUBKEY);
       const poolSol = poolInfo.solReserve.toNumber() / LAMPORTS_PER_SOL;
-      const poolMove = poolInfo.moveTokenReserve.toNumber() / DECIMAL;
 
       if (poolSol === 0) {
         Swal.fire({
@@ -358,7 +356,7 @@ export const HomeView: FC = ({ }) => {
         if (result.isConfirmed) {
           Swal.fire({
             title: `Swapped!`,
-            text: `You have swapped ${amountSwapMove} MOVE to SOL`,
+            text: `You have swapped ${amountSwapMove} MOVE to ${amountSwapMove / 10} SOL`,
             footer: `<a href="https://explorer.solana.com/tx/${addTx}?cluster=devnet" style="text-decoration: underline; color: blue;">Click to view on Solana Explorer</a>`
           })
           setAmountSwapMove(undefined);
@@ -443,10 +441,11 @@ export const HomeView: FC = ({ }) => {
             </p>
           </div>
 
-          <div className="flex justity-between border-2 border-primary rounded-box" style={{ height: '200px' }}>
+
+          <div className="flex justity-between border-2 border-primary rounded-t-box " style={{ height: '220px' }}>
             <div className="grid grid-flow-row w-full items-center">
               <div className="flex w-full">
-                <span className="text-center w-full">Add Liquidity</span>
+                <span className="text-center w-full text-4xl font-light mb-2 text-yellow-400">Add Liquidity</span>
               </div>
               <div className="flex">
                 <div className="h-full flex-col w-1/2 text-center flex items-center justify-center">
@@ -486,9 +485,9 @@ export const HomeView: FC = ({ }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex w-full">
-                <div className="text-left flex flex-col ml-10 mb-4 mt-4 w-full">
+                <div className="text-left flex flex-col ml-20 mb-4 mt-4 w-full">
                   <span className="text-white underline">Pool Info: </span>
                   <li>
                     <span className="text-white">Sol amount: {poolInfo.poolSol}</span>
@@ -504,13 +503,14 @@ export const HomeView: FC = ({ }) => {
 
           {/* SWAP */}
           <br />
-          <div className="flex justity-between border-2 border-primary rounded-box" style={{ height: '170px' }}>
+          <div className="flex justity-between border-2 border-primary rounded-b-box" style={{ height: '170px' }}>
             <div className="grid grid-flow-row w-full items-center">
-              <div className="flex w-full">
-                <span className="text-center w-full">SWAP</span>
-              </div>
+              {/* <div className="flex w-full">
+                <span className="text-center w-full text-4xl font-light text-yellow-400">SWAP</span>
+              </div> */}
               <div className="flex">
                 <div className="h-full flex-col w-1/2 text-center flex items-center justify-center">
+                  <span className="text-center  w-full text-xl font-light text-yellow-400">Swap SOL to MOVE</span>
                   <div className="w-full h-full flex items-center justify-center p-2">
 
                     <input
@@ -525,15 +525,17 @@ export const HomeView: FC = ({ }) => {
                       className="btn btn-primary ml-8"
                       onClick={onHandleSwapSolClick}
 
-                    >SWAP SOL</button>
+                    >SWAP</button>
                   </div>
                   <div className={`w-full h-full flex items-center justify-center p-2`}>
-                    <span className={`text-left ml-10 w-full block`}>
+                    <span className={`text-left ml-20 w-full block`}>
                       You will receive: {amountSwapSol ? amountSwapSol * 10 : 0} MOVE
                     </span>
                   </div>
                 </div>
                 <div className="h-full flex-col w-1/2 text-center flex items-center justify-center">
+                <span className="text-center  w-full text-xl font-light text-yellow-400">Swap Move to SOL</span>
+
                   <div className="w-full h-full flex items-center justify-center p-2">
 
                     <input
@@ -551,7 +553,7 @@ export const HomeView: FC = ({ }) => {
                     >SWAP MOVE</button>
                   </div>
                   <div className={`w-full h-full flex items-center justify-center p-2`}>
-                    <span className={`text-left ml-10 w-full block`}>
+                    <span className={`text-left ml-14 w-full block`}>
                       You will receive: {amountSwapMove ? amountSwapMove / 10 : 0} SOL
                     </span>
                   </div>

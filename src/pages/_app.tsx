@@ -11,8 +11,6 @@ import "../styles/App.css";
 // const endpoint = "https://explorer-api.devnet.solana.com";
 const endpoint = "https://solana-devnet.g.alchemy.com/v2/jFn2wegh5B12OAmy9L8rQXs1qbvLV7R4";
 
-// const endpoint = "https://ssc-dao.genesysgo.net";
-
 const WalletProvider = dynamic(
   () => import("../contexts/ClientWalletProvider"),
   {
