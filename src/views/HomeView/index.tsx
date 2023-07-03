@@ -486,8 +486,10 @@ export const HomeView: FC = ({ }) => {
                   </div>
                 </div>
               </div>
+              
               <div className="flex w-full">
                 <div className="text-left flex flex-col ml-10 mb-4 mt-4 w-full">
+                  <span className="text-white underline">Pool Info: </span>
                   <li>
                     <span className="text-white">Sol amount: {poolInfo.poolSol}</span>
                   </li>
