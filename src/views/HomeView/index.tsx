@@ -550,7 +550,7 @@ export const HomeView: FC = ({ }) => {
                       className="btn btn-primary ml-8"
                       onClick={onHandleSwapMoveClick}
 
-                    >SWAP MOVE</button>
+                    >SWAP</button>
                   </div>
                   <div className={`w-full h-full flex items-center justify-center p-2`}>
                     <span className={`text-left ml-14 w-full block`}>
