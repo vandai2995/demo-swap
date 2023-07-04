@@ -3,9 +3,10 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
 import idl from "../../utils/constant/solana_swap.json";
+import dotenv from "dotenv";
+import { SWAP_PROGRAM_ID } from "utils/various";
 
-const SWAP_PROGRAM = "G8wxZbx3xzSzsLBHaEuNcCeN14nVoBLiHoW3QVEL8dP5";
-const programID = new PublicKey(SWAP_PROGRAM);
+
 
 export interface Wallet {
   signTransaction(
@@ -34,7 +35,7 @@ export const useProgram = ({ connection, wallet }: ProgramProps) => {
       preflightCommitment: 'processed',
       commitment: 'processed'
     });
-    const program = new anchor.Program(idl as any, programID, provider);
+    const program = new anchor.Program(idl as any, SWAP_PROGRAM_ID, provider);
 
     setProgram(program);
   };

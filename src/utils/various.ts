@@ -1,10 +1,13 @@
 import * as anchor from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import fs from 'fs';
 import * as splToken from '@solana/spl-token';
-export const SWAP_PROGRAM_ID = new anchor.web3.PublicKey("G8wxZbx3xzSzsLBHaEuNcCeN14nVoBLiHoW3QVEL8dP5");
-export const POOL_PUBKEY = new anchor.web3.PublicKey("HpnCVKQ2aWy4u15W1QQdxA9cjzZD3EW3LsAWTMtVMoa9")
-export const MOVE_TOKEN = new anchor.web3.PublicKey("sy4LXfLXTmMQUCUVjaNf59Kc274NWKXZPjCzMPhM1je");
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+export const SWAP_PROGRAM_ID = new anchor.web3.PublicKey(process.env.NEXT_PUBLIC_SWAP_PROGRAM_ID as string);
+export const POOL_PUBKEY = new anchor.web3.PublicKey(process.env.NEXT_PUBLIC_POOL_PUBKEY as string);
+export const MOVE_TOKEN = new anchor.web3.PublicKey(process.env.NEXT_PUBLIC_MOVE_TOKEN as string);
 export const DECIMAL = 1000000000;
 export function loadWalletKey(secret: any): anchor.web3.Keypair {
 
