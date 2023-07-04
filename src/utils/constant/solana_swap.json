@@ -3,11 +3,6 @@
   "name": "solana_swap",
   "instructions": [
     {
-      "name": "initialize",
-      "accounts": [],
-      "args": []
-    },
-    {
       "name": "createLiquidityPool",
       "accounts": [
         {
@@ -225,6 +220,38 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "pauseLiquidityPool",
+      "accounts": [
+        {
+          "name": "liquidityPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "unpauseLiquidityPool",
+      "accounts": [
+        {
+          "name": "liquidityPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
